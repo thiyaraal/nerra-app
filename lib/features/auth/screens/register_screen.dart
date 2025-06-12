@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:narra_apps/features/auth/screens/login_screen.dart';
+import 'package:narra_apps/core/widgets/elevated_button_widget.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -79,7 +81,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               children: [
                 Text('Sudah punya akun ?'),
-                TextButton(child: Text('Login'), onPressed: () {}),
+                TextButton(child: Text('Login'), onPressed: () {
+                  Navigator.pop(context);
+                }),
               ],
             ),
           ],
@@ -88,18 +92,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       bottomNavigationBar: Container(
         height: 50,
         margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
-        child: ElevatedButton(
-          onPressed: () {},
-          child: const Text(
-            'Register',
-            style: TextStyle(fontSize: 16, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF7A86B6),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+        child: CustomElevatedButton(
+          labelText: 'Register',
+          onPressed: () {
+           Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
         ),
       ),
     );

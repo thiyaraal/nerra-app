@@ -1,97 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:narra_apps/features/auth/screens/register_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:narra_apps/core/helpers/paths.dart';
+import 'package:narra_apps/core/widgets/logo_card.dart';
+import 'package:narra_apps/core/widgets/elevated_button_widget.dart';
+import 'package:narra_apps/core/widgets/form_field.dart';
+import 'package:narra_apps/features/auth/cubit/login_cubit.dart';
+import 'package:narra_apps/features/auth/cubit/login_state.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'NARRA',
-                  style: TextStyle(
-                    fontFamily: 'Georgia',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF7A86B6),
-                    letterSpacing: 4,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    height: 1,
-                    width: 40,
-                    color: Color(0xFF7A86B6),
-                    margin: const EdgeInsets.only(left: 140),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'email',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
+    return BlocProvider(
+      create: (_) => LoginCubit(),
+      child: Scaffold(
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: BlocConsumer<LoginCubit, LoginState>(
+              listener: (ctx, state) {
+                if (state.status == FormStatus.success) {
+                  context.go(Paths.home);
+                } else if (state.status == FormStatus.failure &&
+                    state.errorMessage != null) {
+                  ScaffoldMessenger.of(
+                    ctx,
+                  ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+                }
+              },
+              builder: (ctx, state) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LogoCard(),
+                    const SizedBox(height: 32),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'password',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
+                    CustomFormField(
+                      labelText: 'Email',
+                      initialValue: state.email,
+                      onChanged: ctx.read<LoginCubit>().emailChanged,
+                    ),
+                    const SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+                    CustomFormField(
+                      labelText: 'Password',
+                      obscureText: true,
+                      initialValue: state.password,
+                      onChanged: ctx.read<LoginCubit>().passwordChanged,
+                    ),
+                    const SizedBox(height: 24),
 
-              children: [
-                Text('belum punya akun ?'),
-                TextButton(child: Text('Register'), onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => const RegisterScreen(),
-                  ));
-                }),
-              ],
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 50,
-        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
-        child: ElevatedButton(
-          onPressed: () {},
-          child: const Text(
-            'Login',
-            style: TextStyle(fontSize: 16, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF7A86B6),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+                    if (state.status == FormStatus.loading)
+                      const CircularProgressIndicator()
+                    else
+                      CustomElevatedButton(
+                        labelText: 'Login',
+                        onPressed: ctx.read<LoginCubit>().submit,
+                      ),
+
+                    const SizedBox(height: 16),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Belum punya akun?'),
+                        TextButton(
+                          onPressed: () => context.go(Paths.register),
+                          child: const Text('Register'),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
