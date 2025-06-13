@@ -17,8 +17,12 @@ class _CustomElevatedButtonState extends State<CustomElevatedButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      
+      
       onPressed: widget.onPressed,
       style: ElevatedButton.styleFrom(
+        //untuk lebar tombol bagiamana 
+        minimumSize: const Size(double.infinity, 50),
         backgroundColor: const Color(0xFF7A86B6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),

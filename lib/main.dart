@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:narra_apps/core/constants/color_styles.dart';
-import 'package:narra_apps/core/helpers/app_provider.dart';
 
 import 'package:narra_apps/core/helpers/go_routes.dart';
+import 'package:narra_apps/core/utils/shared_prefrences.dart';
+import 'package:narra_apps/features/auth/login/cubit/auth_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:provider/provider.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  await SharedPrefsHelper.init(prefs);
+
+  final authCubit = AuthCubit(SharedPrefsHelper.prefsInstance);
+
+  runApp(BlocProvider.value(value: authCubit, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,19 +23,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: AppProviders.getProviders(),
-      child: MaterialApp.router(
-        title: 'HCISDDRMOBILE',
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(backgroundColor: ColorStyles.white),
-          brightness: Brightness.light,
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: ColorStyles.white,
-        ),
-        routerConfig: appRouter,
-        debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      routerConfig: buildAppRouter(context),
+      title: 'HCISDDRMOBILE',
+      theme: ThemeData(
+        
+        appBarTheme: const AppBarTheme(backgroundColor: ColorStyles.white),
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: ColorStyles.white,
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

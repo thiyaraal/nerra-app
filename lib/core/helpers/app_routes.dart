@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:narra_apps/features/add_stories/views/add_stories.dart';
 import 'package:narra_apps/features/stories/screens/detail_stories.dart';
-import 'package:narra_apps/features/auth/screens/login_screen.dart';
+import 'package:narra_apps/features/auth/login/screens/login_screen.dart';
 import 'package:narra_apps/features/home/screens/home_screen.dart';
-import 'package:narra_apps/features/home/screens/main_home_scree.dart';
+
 import 'package:narra_apps/features/stories/screens/list_stories.dart';
 
 class AppRoutes {
@@ -16,21 +16,12 @@ class AppRoutes {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case main:
-      //   final args = settings.arguments as Map<String, dynamic>? ?? {};
-      //   final initialIndex = args['initialIndex'] as int? ?? 0;
-      //   return MaterialPageRoute(
-      //     builder: (_) => MainHomeScreen(activeScreen: initialIndex),
-      //   );
-
       case login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case addStories:
         return MaterialPageRoute(builder: (_) => const AddStoriesScreen());
-        case detailStories:
-        return MaterialPageRoute(
-          builder: (_) => const DetailStoriesScreen(),
-        );
+      case detailStories:
+        return MaterialPageRoute(builder: (_) => const DetailStoriesScreen());
 
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());

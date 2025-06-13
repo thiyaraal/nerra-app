@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:narra_apps/core/constants/color_styles.dart';
 import 'package:narra_apps/core/constants/font_sizes.dart';
@@ -9,6 +10,7 @@ import 'package:narra_apps/core/helpers/paths.dart';
 import 'package:narra_apps/core/widgets/card_image.dart';
 import 'package:narra_apps/core/widgets/logo_card.dart';
 import 'package:narra_apps/core/widgets/profile_card.dart';
+import 'package:narra_apps/features/auth/login/cubit/auth_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const LogoCard(),
         actions: [
           TextButton(
-            onPressed: () => context.go(Paths.logout),
+            onPressed: () {
+              context.read<AuthCubit>().logout();
+            },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -71,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 12.0),
                       child: CardImage(
-                          onTap: () => context.go(Paths.detailStories),
+                        onTap: () => context.go(Paths.detailStories),
                         image: ImageCollection.bunga,
                         title: 'Thiyaraal',
                       ),
